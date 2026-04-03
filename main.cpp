@@ -5,8 +5,8 @@
 using namespace std;
 
 /**
-* @brief точка входа в программу
-* @return 0, если программа выполнена правильно
+* @brief С‚РѕС‡РєР° РІС…РѕРґР° РІ РїСЂРѕРіСЂР°РјРјСѓ
+* @return 0, РµСЃР»Рё РїСЂРѕРіСЂР°РјРјР° РІС‹РїРѕР»РЅРµРЅР° РїСЂР°РІРёР»СЊРЅРѕ
 */
 int main(void)
 {
@@ -14,20 +14,20 @@ int main(void)
 
 
     Circle circle1(2.5, -1.0, 3.0);
-    cout << "Окружность 1: " << circle1 << endl;
-    cout << "Площадь круга: " << circle1.getArea() << endl;
-    cout << "Длина окружности: " << circle1.getCircumference() << endl;
+    cout << "РћРєСЂСѓР¶РЅРѕСЃС‚СЊ 1: " << circle1 << endl;
+    cout << "РџР»РѕС‰Р°РґСЊ РєСЂСѓРіР°: " << circle1.getArea() << endl;
+    cout << "Р”Р»РёРЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё: " << circle1.getCircumference() << endl;
     cout << endl;
     
 
     Circle circle2(0,0,0);
-    cout << "Введите данные для окружности 2:" << endl;
+    cout << "Р’РІРµРґРёС‚Рµ РґР°РЅРЅС‹Рµ РґР»СЏ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё 2:" << endl;
     cin >> circle2;
-    cout << "Вы ввели: " << circle2 << endl;
-    cout << "Площадь: " << circle2.getArea() << endl;
-    cout << "Длина окружности: " << circle2.getCircumference() << endl;
+    cout << "Р’С‹ РІРІРµР»Рё: " << circle2 << endl;
+    cout << "РџР»РѕС‰Р°РґСЊ: " << circle2.getArea() << endl;
+    cout << "Р”Р»РёРЅР° РѕРєСЂСѓР¶РЅРѕСЃС‚Рё: " << circle2.getCircumference() << endl;
     cout << endl;
-    cout << "Программа выполнена успешно" << endl;
+    cout << "РџСЂРѕРіСЂР°РјРјР° РІС‹РїРѕР»РЅРµРЅР° СѓСЃРїРµС€РЅРѕ" << endl;
 
     return 0;
 }
