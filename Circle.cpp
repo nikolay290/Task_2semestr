@@ -12,13 +12,13 @@ Circle::Circle(const double centerX, const double centerY, const double r) : x(c
 
 }
 
-// Вычисление площади круга
+// Р’С‹С‡РёСЃР»РµРЅРёРµ РїР»РѕС‰Р°РґРё РєСЂСѓРіР°
 double Circle::getArea() const
 {
     return M_PI * radius * radius;
 }
 
-// Вычисление длины окружности
+// Р’С‹С‡РёСЃР»РµРЅРёРµ РґР»РёРЅС‹ РѕРєСЂСѓР¶РЅРѕСЃС‚Рё
 double Circle::getCircumference() const
 {
     return 2 * M_PI * radius;
@@ -26,27 +26,27 @@ double Circle::getCircumference() const
 
 ostream& operator<<(ostream& os, const Circle& circle)
 {
-    os << "Центр: (" << circle.x << ";" << circle.y
-        << "), Радиус: " << circle.radius;
+    os << "Р¦РµРЅС‚СЂ: (" << circle.x << ";" << circle.y
+        << "), Р Р°РґРёСѓСЃ: " << circle.radius;
     return os;
 }
 
 
 istream& operator>>(istream& is, Circle& circle)
 {
-    cout << "Введите координаты центра (x y): ";
+    cout << "Р’РІРµРґРёС‚Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С†РµРЅС‚СЂР° (x y): ";
     is >> circle.x >> circle.y;
     if (!circle.x || !circle.y)
     {
-        cout << "Ошбика обе координаты должны быть числами";
+        cout << "РћС€Р±РёРєР° РѕР±Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ С‡РёСЃР»Р°РјРё";
         exit(1);
     }
-    cout << "Введите радиус: ";
+    cout << "Р’РІРµРґРёС‚Рµ СЂР°РґРёСѓСЃ: ";
     is >> circle.radius;
 
     if (circle.radius < DBL_EPSILON)
     {
-        cout << "Ошбика радиус должен быть положительным";
+        cout << "РћС€Р±РёРєР° СЂР°РґРёСѓСЃ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїРѕР»РѕР¶РёС‚РµР»СЊРЅС‹Рј";
         exit(1);
     }
 
