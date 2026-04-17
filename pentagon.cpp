@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <numeric>
+#include <utility>
 
 namespace geometry {
 
@@ -154,7 +155,7 @@ namespace geometry {
         }
 
         double perimeter = 0.0;
-        for (int i = 0; i < VERTEX_COUNT; ++i) {
+        for (size_t i = 0; i < VERTEX_COUNT; ++i) {
             const Point& p1 = vertices[i];
             const Point& p2 = vertices[(i + 1) % VERTEX_COUNT];
             perimeter += p1.distanceTo(p2);
