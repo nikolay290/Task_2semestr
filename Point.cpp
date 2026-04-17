@@ -8,6 +8,16 @@ namespace geometry {
     {
     }
 
+    Point::Point(const Point& other) : x(other.x), y(other.y)
+    {
+    }
+
+    Point::Point(Point&& other) : x(other.x), y(other.y)
+    {
+        other.x = 0.0;
+        other.y = 0.0;
+    }
+
     double Point::getX() const
     {
         return x;
@@ -23,6 +33,26 @@ namespace geometry {
         double dx = x - other.x;
         double dy = y - other.y;
         return std::sqrt(dx * dx + dy * dy);
+    }
+
+    Point& Point::operator=(const Point& other)
+    {
+        if (this != &other) {
+            x = other.x;
+            y = other.y;
+        }
+        return *this;
+    }
+
+    Point& Point::operator=(Point&& other)
+    {
+        if (this != &other) {
+            x = other.x;
+            y = other.y;
+            other.x = 0.0;
+            other.y = 0.0;
+        }
+        return *this;
     }
 
     bool Point::operator==(const Point& other) const {
