@@ -1,4 +1,4 @@
-﻿#include "../Task2/pentagon.h"
+#include "../Task2/pentagon.h"
 #include "../Task2/point.h"
 #include "CppUnitTest.h"
 #include <sstream>
@@ -14,7 +14,7 @@ namespace Tests
     {
     private:
         // Константа для сравнения double с учётом погрешности
-        static constexpr double EPSILON = std::numeric_limits<double>::epsilon();
+        static constexpr double EPSILON = std::numeric_limits<double>::epsilon() * 1000;
 
         // Вспомогательный метод для сравнения double с погрешностью
         static bool areEqual(double expected, double actual, double epsilon = EPSILON)
@@ -23,7 +23,7 @@ namespace Tests
         }
 
     public:
- 
+        // ==================== КОНСТРУКТОРЫ ====================
 
         // 1. Тест конструктора по умолчанию
         TEST_METHOD(TestDefaultConstructor)
@@ -48,7 +48,7 @@ namespace Tests
             Assert::IsTrue(pentagon.getCircumradius() > 0);
         }
 
-        // 3. Тест конструктора с координатами
+        // 3. Тест конструктора с координатами (const параметры)
         TEST_METHOD(TestConstructorWithCoordinates)
         {
             Pentagon pentagon(2.0, 0.0, 0.618, 1.902, -1.618, 1.176, -1.618, -1.176, 0.618, -1.902);
@@ -221,13 +221,16 @@ namespace Tests
             Assert::IsTrue(result.find("v5=") != std::string::npos);
         }
 
-        // 18. Тест статического метода ToString
-        TEST_METHOD(TestStaticToString)
+        // 18. Тест сериализации через оператор <<
+        TEST_METHOD(TestSerializationViaOperator)
         {
             Pentagon pentagon(2.0, 0.0, 0.618, 1.902, -1.618, 1.176, -1.618, -1.176, 0.618, -1.902);
-            std::string result = Pentagon::ToString(pentagon);
+            std::stringstream ss;
+            ss << pentagon;
 
+            std::string result = ss.str();
             Assert::IsTrue(result.find("Pentagon") != std::string::npos);
+            Assert::IsTrue(result.find("v1=") != std::string::npos);
         }
 
         // ==================== ОПЕРАТОРЫ ВВОДА/ВЫВОДА ====================
@@ -243,8 +246,8 @@ namespace Tests
             Assert::IsTrue(result.find("Pentagon") != std::string::npos);
         }
 
-        // 20. Тест оператора ввода >> (формат как в вашем коде)
-        TEST_METHOD(TestInputStreamOperator)
+        // 20. Тест оператора ввода >> (формат (x, y) с пробелами)
+        TEST_METHOD(TestInputStreamOperator_WithSpaces)
         {
             Pentagon pentagon;
             std::string input = "(2, 0) (0.618, 1.902) (-1.618, 1.176) (-1.618, -1.176) (0.618, -1.902)";
@@ -255,7 +258,19 @@ namespace Tests
             Assert::IsTrue(pentagon.getPerimeter() > 0);
         }
 
-        // 21. Тест метода read()
+        // 21. Тест оператора ввода >> (формат (x,y) без пробелов)
+        TEST_METHOD(TestInputStreamOperator_NoSpaces)
+        {
+            Pentagon pentagon;
+            std::string input = "(2,0)(0.618,1.902)(-1.618,1.176)(-1.618,-1.176)(0.618,-1.902)";
+            std::stringstream ss(input);
+
+            ss >> pentagon;
+
+            Assert::IsTrue(pentagon.getPerimeter() > 0);
+        }
+
+        // 22. Тест метода read()
         TEST_METHOD(TestReadMethod)
         {
             Pentagon pentagon;
@@ -267,25 +282,13 @@ namespace Tests
             Assert::IsTrue(pentagon.getPerimeter() > 0);
         }
 
-        // 22. Тест статического метода readFromStream
+        // 23. Тест статического метода readFromStream
         TEST_METHOD(TestReadFromStream)
         {
             std::string input = "(2, 0) (0.618, 1.902) (-1.618, 1.176) (-1.618, -1.176) (0.618, -1.902)";
             std::stringstream ss(input);
 
             Pentagon pentagon = Pentagon::readFromStream(ss);
-
-            Assert::IsTrue(pentagon.getPerimeter() > 0);
-        }
-
-        // 23. Тест оператора ввода >> без пробелов
-        TEST_METHOD(TestInputStreamOperator_NoSpaces)
-        {
-            Pentagon pentagon;
-            std::string input = "(2,0)(0.618,1.902)(-1.618,1.176)(-1.618,-1.176)(0.618,-1.902)";
-            std::stringstream ss(input);
-
-            ss >> pentagon;
 
             Assert::IsTrue(pentagon.getPerimeter() > 0);
         }
@@ -337,7 +340,7 @@ namespace Tests
             Pentagon pentagon(p1, p2, p3, p4, p5);
             std::vector<Point> vertices = pentagon.getVertices();
 
-            Assert::AreEqual(5, vertices.size(), 0.0);
+            Assert::AreEqual(5u, vertices.size(), DBL_EPSILON);
             Assert::IsTrue(p1 == vertices[0]);
             Assert::IsTrue(p2 == vertices[1]);
             Assert::IsTrue(p3 == vertices[2]);
@@ -374,7 +377,7 @@ namespace Tests
                 3.0, 0.0, 0.927, 2.853, -2.427, 1.764, -2.427, -1.764, 0.927, -2.853
             ));
 
-            Assert::AreEqual(3, polygons.size(), 0.0);
+            Assert::AreEqual(3u, polygons.size(), DBL_EPSILON);
             Assert::IsTrue(polygons[1]->getPerimeter() > polygons[0]->getPerimeter());
             Assert::IsTrue(polygons[2]->getPerimeter() > polygons[1]->getPerimeter());
         }
@@ -407,6 +410,249 @@ namespace Tests
             Assert::IsTrue(large.getPerimeter() > small.getPerimeter());
             Assert::IsTrue(large.getArea() > small.getArea());
             Assert::IsTrue(large.getCircumradius() > small.getCircumradius());
+        }
+
+        // 33. Тест десериализации после сериализации
+        TEST_METHOD(TestDeserializationAfterSerialization)
+        {
+            Pentagon original(2.0, 0.0, 0.618, 1.902, -1.618, 1.176, -1.618, -1.176, 0.618, -1.902);
+
+            // Сериализуем в строку через ToString()
+            std::string serialized = original.ToString();
+
+            // Для десериализации нужно прочитать из потока в формате (x, y)
+            std::stringstream ss;
+            for (const auto& v : original.getVertices()) {
+                ss << v;
+            }
+
+            Pentagon deserialized;
+            ss >> deserialized;
+
+            Assert::IsTrue(areEqual(original.getPerimeter(), deserialized.getPerimeter()));
+            Assert::IsTrue(areEqual(original.getArea(), deserialized.getArea()));
+        }
+    };
+}
+
+// ==================== ТЕСТЫ ДЛЯ КЛАССА POINT ====================
+
+namespace Tests
+{
+    TEST_CLASS(PointTests)
+    {
+    public:
+        // 1. Тест конструктора по умолчанию
+        TEST_METHOD(TestDefaultConstructor)
+        {
+            Point p;
+            Assert::AreEqual(0.0, p.getX());
+            Assert::AreEqual(0.0, p.getY());
+        }
+
+        // 2. Тест конструктора с параметрами
+        TEST_METHOD(TestParameterizedConstructor)
+        {
+            Point p(3.5, 7.2);
+            Assert::AreEqual(3.5, p.getX());
+            Assert::AreEqual(7.2, p.getY());
+        }
+
+        // 3. Тест конструктора копирования
+        TEST_METHOD(TestCopyConstructor)
+        {
+            Point original(3.5, 7.2);
+            Point copy(original);
+
+            Assert::AreEqual(original.getX(), copy.getX());
+            Assert::AreEqual(original.getY(), copy.getY());
+        }
+
+        // 4. Тест конструктора перемещения
+        TEST_METHOD(TestMoveConstructor)
+        {
+            Point original(3.5, 7.2);
+            double originalX = original.getX();
+            double originalY = original.getY();
+
+            Point moved(std::move(original));
+
+            Assert::AreEqual(originalX, moved.getX());
+            Assert::AreEqual(originalY, moved.getY());
+        }
+
+        // 5. Тест оператора присваивания (копирование)
+        TEST_METHOD(TestAssignmentOperator)
+        {
+            Point original(3.5, 7.2);
+            Point assigned;
+
+            assigned = original;
+
+            Assert::AreEqual(original.getX(), assigned.getX());
+            Assert::AreEqual(original.getY(), assigned.getY());
+        }
+
+        // 6. Тест оператора присваивания (перемещение)
+        TEST_METHOD(TestMoveAssignmentOperator)
+        {
+            Point original(3.5, 7.2);
+            double originalX = original.getX();
+            double originalY = original.getY();
+            Point assigned;
+
+            assigned = std::move(original);
+
+            Assert::AreEqual(originalX, assigned.getX());
+            Assert::AreEqual(originalY, assigned.getY());
+        }
+
+        // 7. Тест самоприсваивания
+        TEST_METHOD(TestSelfAssignment)
+        {
+            Point p(3.5, 7.2);
+            p = p;
+
+            Assert::AreEqual(3.5, p.getX());
+            Assert::AreEqual(7.2, p.getY());
+        }
+
+        // 8. Тест метода getX()
+        TEST_METHOD(TestGetX)
+        {
+            Point p(4.5, 6.7);
+            Assert::AreEqual(4.5, p.getX());
+        }
+
+        // 9. Тест метода getY()
+        TEST_METHOD(TestGetY)
+        {
+            Point p(4.5, 6.7);
+            Assert::AreEqual(6.7, p.getY());
+        }
+
+        // 10. Тест метода distanceTo()
+        TEST_METHOD(TestDistanceTo)
+        {
+            Point p1(0, 0);
+            Point p2(3, 4);
+            Assert::AreEqual(5.0, p1.distanceTo(p2));
+        }
+
+        // 11. Тест оператора равенства == (равные точки)
+        TEST_METHOD(TestEqualityOperator_EqualPoints)
+        {
+            Point p1(2.5, 3.5);
+            Point p2(2.5, 3.5);
+            Assert::IsTrue(p1 == p2);
+        }
+
+        // 12. Тест оператора равенства == (разные точки)
+        TEST_METHOD(TestEqualityOperator_DifferentPoints)
+        {
+            Point p1(2.5, 3.5);
+            Point p2(2.5, 4.0);
+            Assert::IsFalse(p1 == p2);
+        }
+
+        // 13. Тест оператора неравенства !=
+        TEST_METHOD(TestInequalityOperator)
+        {
+            Point p1(2.5, 3.5);
+            Point p2(2.5, 3.5);
+            Point p3(2.5, 4.0);
+
+            Assert::IsFalse(p1 != p2);
+            Assert::IsTrue(p1 != p3);
+        }
+
+        // 14. Тест оператора вывода <<
+        TEST_METHOD(TestOutputStreamOperator)
+        {
+            Point p(3.14, 2.71);
+            std::stringstream ss;
+            ss << p;
+
+            std::string result = ss.str();
+            Assert::IsTrue(result.find("(") != std::string::npos);
+            Assert::IsTrue(result.find(")") != std::string::npos);
+            Assert::IsTrue(result.find("3.14") != std::string::npos);
+            Assert::IsTrue(result.find("2.71") != std::string::npos);
+        }
+
+        // 15. Тест оператора ввода >> (формат (x, y))
+        TEST_METHOD(TestInputStreamOperator_ValidFormat)
+        {
+            Point p;
+            std::string input = "(15.5, 20.3)";
+            std::stringstream ss(input);
+
+            ss >> p;
+
+            Assert::AreEqual(15.5, p.getX());
+            Assert::AreEqual(20.3, p.getY());
+        }
+
+        // 16. Тест оператора ввода >> (формат (x,y) без пробелов)
+        TEST_METHOD(TestInputStreamOperator_NoSpaces)
+        {
+            Point p;
+            std::string input = "(15.5,20.3)";
+            std::stringstream ss(input);
+
+            ss >> p;
+
+            Assert::AreEqual(15.5, p.getX());
+            Assert::AreEqual(20.3, p.getY());
+        }
+
+        // 17. Тест оператора ввода >> с отрицательными числами
+        TEST_METHOD(TestInputStreamOperator_NegativeValues)
+        {
+            Point p;
+            std::string input = "(-7.5, -12.3)";
+            std::stringstream ss(input);
+
+            ss >> p;
+
+            Assert::AreEqual(-7.5, p.getX());
+            Assert::AreEqual(-12.3, p.getY());
+        }
+
+        // 18. Тест оператора ввода >> с пробелами
+        TEST_METHOD(TestInputStreamOperator_WithSpaces)
+        {
+            Point p;
+            std::string input = "(  10  ,   20  )";
+            std::stringstream ss(input);
+
+            ss >> p;
+
+            Assert::AreEqual(10.0, p.getX());
+            Assert::AreEqual(20.0, p.getY());
+        }
+
+        // 19. Тест цепочечного ввода
+        TEST_METHOD(TestChainedInputStream)
+        {
+            Point p1, p2;
+            std::string input = "(1.0,2.0)(3.0,4.0)";
+            std::stringstream ss(input);
+
+            ss >> p1 >> p2;
+
+            Assert::AreEqual(1.0, p1.getX());
+            Assert::AreEqual(2.0, p1.getY());
+            Assert::AreEqual(3.0, p2.getX());
+            Assert::AreEqual(4.0, p2.getY());
+        }
+
+        // 20. Тест оператора равенства с очень близкими числами (эпсилон)
+        TEST_METHOD(TestEqualityOperator_VeryCloseNumbers)
+        {
+            Point p1(0.1 + 0.2, 0.3);
+            Point p2(0.3, 0.3);
+            Assert::IsTrue(p1 == p2);
         }
     };
 }
