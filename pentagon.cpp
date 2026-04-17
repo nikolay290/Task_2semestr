@@ -1,4 +1,4 @@
-﻿#define _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES
 #include "pentagon.h"
 #include <cmath>
 #include <sstream>
@@ -26,8 +26,9 @@ namespace geometry {
         }
     }
 
-    Pentagon::Pentagon(double x1, double y1, double x2, double y2, double x3, double y3,
-        double x4, double y4, double x5, double y5)
+    Pentagon::Pentagon(const double x1, const double y1, const double x2, const double y2,
+        const double x3, const double y3, const double x4, const double y4,
+        const double x5, const double y5)
     {
         vertices.push_back(Point(x1, y1));
         vertices.push_back(Point(x2, y2));
@@ -39,6 +40,7 @@ namespace geometry {
             std::cout << "Ошибка: точки не образуют правильный пятиугольник!" << std::endl;
         }
     }
+
     Pentagon::Pentagon(const Pentagon& other)
     {
         for (const auto& p : other.vertices) {
@@ -78,10 +80,10 @@ namespace geometry {
         }
 
         std::vector<double> sides;
-        for (int i = 0; i < VERTEX_COUNT; ++i) {
+        for (size_t i = 0; i < VERTEX_COUNT; ++i) {
             const Point& p1 = vertices[i];
             const Point& p2 = vertices[(i + 1) % VERTEX_COUNT];
-             long double side = p1.distanceTo(p2);
+            long double side = p1.distanceTo(p2);
 
             // Сторона должна быть положительным числом
             if (side <= std::numeric_limits<double>::epsilon()) {
@@ -90,15 +92,15 @@ namespace geometry {
             sides.push_back(side);
         }
 
-        for (int i = 1; i < VERTEX_COUNT; ++i) {
+        for (size_t i = 1; i < VERTEX_COUNT; ++i) {
             if ((double)std::fabs(sides[i] - sides[0]) > std::numeric_limits<double>::epsilon()) {
                 return false;
             }
         }
 
-        double expectedAngle = 3.0 * M_PI / 5.0; 
+        double expectedAngle = 3.0 * M_PI / 5.0;
 
-        for (int i = 0; i < VERTEX_COUNT; ++i) {
+        for (size_t i = 0; i < VERTEX_COUNT; ++i) {
             const Point& p1 = vertices[i];
             const Point& p2 = vertices[(i + 1) % VERTEX_COUNT];
             const Point& p3 = vertices[(i + 2) % VERTEX_COUNT];
@@ -110,7 +112,7 @@ namespace geometry {
         }
 
         // Проверка, что никакие три точки не лежат на одной прямой
-        for (int i = 0; i < VERTEX_COUNT; ++i) {
+        for (size_t i = 0; i < VERTEX_COUNT; ++i) {
             const Point& p1 = vertices[i];
             const Point& p2 = vertices[(i + 1) % VERTEX_COUNT];
             const Point& p3 = vertices[(i + 2) % VERTEX_COUNT];
@@ -140,8 +142,6 @@ namespace geometry {
     }
 
     double Pentagon::getArea() const {
-
-
         // Площадь правильного пятиугольника через сторону
         double side = getPerimeter() / VERTEX_COUNT;
         double area = (1.0 / 4.0) * std::sqrt(5.0 * (5.0 + 2.0 * sqrt(5.0))) * side * side;
@@ -163,9 +163,7 @@ namespace geometry {
     }
 
     double Pentagon::getCircumradius() const {
-
         double side = getPerimeter() / VERTEX_COUNT;
-
         double radius = side / (2.0 * std::sin(M_PI / 5.0));
         return radius;
     }
@@ -174,7 +172,7 @@ namespace geometry {
         std::vector<Point> newVertices;
         newVertices.resize(VERTEX_COUNT);
 
-        for (int i = 0; i < VERTEX_COUNT; ++i) {
+        for (size_t i = 0; i < VERTEX_COUNT; ++i) {
             is >> newVertices[i];
         }
 
@@ -183,6 +181,7 @@ namespace geometry {
             std::cout << "Ошибка: точки не образуют правильный пятиугольник!" << std::endl;
         }
     }
+
     Pentagon& Pentagon::operator=(const Pentagon& other)
     {
         if (this == &other)
@@ -195,6 +194,7 @@ namespace geometry {
         }
         return *this;
     }
+
     Pentagon& Pentagon::operator=(Pentagon&& other)
     {
         if (this == &other)
@@ -204,6 +204,7 @@ namespace geometry {
         std::swap(this->vertices, other.vertices);
         return *this;
     }
+
     bool Pentagon::operator==(const Pentagon& other) const
     {
         if (this->vertices.size() != other.vertices.size())
@@ -220,27 +221,22 @@ namespace geometry {
         }
         return true;
     }
-    
+
     bool Pentagon::operator!=(const Pentagon& other) const
     {
         return !(*this == other);
     }
 
-  
     std::ostream& operator<<(std::ostream& os, const Pentagon& pentagon)
     {
         os << pentagon.ToString();
         return os;
     }
 
- 
     std::istream& operator>>(std::istream& is, Pentagon& pentagon)
     {
         pentagon.read(is);
         return is;
-    }
-    std::string Pentagon::ToString(const Pentagon& pentagon) {
-        return pentagon.ToString();
     }
 
     Pentagon Pentagon::readFromStream(std::istream& is) {
