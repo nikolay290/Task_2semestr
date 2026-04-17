@@ -54,16 +54,16 @@ namespace geometry {
         double distanceTo(const Point& other) const;
 
         /**
-         * @brief Оператор копирование
+         * @brief Оператор присваивания (копирование)
          * @param other Другая точка
-         * @return Ссылка на текущий объект
+         * @return ссылка на текущий объект
          */
         Point& operator=(const Point& other);
 
         /**
-         * @brief Оператор перемещение
+         * @brief Оператор присваивания (перемещение)
          * @param other Другая точка
-         * @return Ссылка на текущий объект
+         * @return ссылка на текущий объект
          */
         Point& operator=(Point&& other);
 
