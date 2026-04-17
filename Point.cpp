@@ -2,20 +2,23 @@
 #include <cmath>
 #include <limits>
 #include <iostream>
+#include <utility>
 
 namespace geometry {
     Point::Point(const double x, const double y) : x(x), y(y)
     {
     }
 
-    Point::Point(const Point& other) : x(other.x), y(other.y)
+    Point::Point(const Point& other)
     {
+        this->x = other.x;
+        this->y = other.y;
     }
 
-    Point::Point(Point&& other) : x(other.x), y(other.y)
+    Point::Point(Point&& other)
     {
-        other.x = 0.0;
-        other.y = 0.0;
+        std::swap(this->x, other.x);
+        std::swap(this->y, other.y);
     }
 
     double Point::getX() const
@@ -37,21 +40,23 @@ namespace geometry {
 
     Point& Point::operator=(const Point& other)
     {
-        if (this != &other) {
-            x = other.x;
-            y = other.y;
+        if (this == &other)
+        {
+            return *this;
         }
+        this->x = other.x;
+        this->y = other.y;
         return *this;
     }
 
     Point& Point::operator=(Point&& other)
     {
-        if (this != &other) {
-            x = other.x;
-            y = other.y;
-            other.x = 0.0;
-            other.y = 0.0;
+        if (this == &other)
+        {
+            return *this;
         }
+        std::swap(this->x, other.x);
+        std::swap(this->y, other.y);
         return *this;
     }
 
