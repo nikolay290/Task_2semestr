@@ -6,7 +6,7 @@
 namespace geometry {
     class Pentagon : public Polygon {
     private:
-        static const int VERTEX_COUNT = 5;
+        static const size_t VERTEX_COUNT = 5;
 
         /**
          * @brief Проверяет корректность правильного пятиугольника
