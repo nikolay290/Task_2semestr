@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <memory>
 #include "pentagon.h"
@@ -91,8 +91,9 @@ int main(void) {
         std::cout << "pentagon4 == pentagon6: " << (pentagon2 == pentagon1 ? "true" : "false") << "\n";
         std::cout << "pentagon4 != pentagon6: " << (pentagon1 != pentagon2 ? "true" : "false") << "\n\n";
 
-        std::cout << "5. Демонстрация статического метода ToString:\n";
-        std::cout << geometry::Pentagon::ToString(pentagon1) << "\n\n";
+        std::cout << "5. Демонстрация сериализации в строку (метод ToString):\n";
+        std::string serialized = pentagon1.ToString();
+        std::cout << "Сериализованный пятиугольник 1: " << serialized << "\n";
 
         std::cout << "6. Демонстрация статического метода readFromStream:\n";
         std::cout << "Введите вершины пятиугольника в формате (x, y) (5 раз):\n";
@@ -102,7 +103,7 @@ int main(void) {
 
         std::cout << "7. Попытка создания некорректного пятиугольника (ожидается исключение):\n";
         try {
-            // Некорректный пятиугольник (не все стороны равны)
+            
             geometry::Pentagon invalidPentagon(0, 0, 2, 0, 2, 2, 0, 2, 1, 3);
         }
         catch (const std::exception& e) {
