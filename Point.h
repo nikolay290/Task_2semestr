@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 
 namespace geometry {
@@ -7,21 +7,32 @@ namespace geometry {
         /**
         * @brief x - координата точки по оси OX
         */
-        double x=0;
-        
+        double x;
+
         /**
         * @brief y - координата точки по оси OY
         */
-        double y=0;
+        double y;
 
     public:
         /**
         * @brief Конструктор, создаёт точку с координатами x,y
         * @param x - координата точки по оси OX
         * @param y - координата точки по оси OY
-        * @return Значение координаты x
         */
         Point(double x = 0.0, double y = 0.0);
+
+        /**
+        * @brief Конструктор копирования
+        * @param other - другая точка
+        */
+        Point(const Point& other);
+
+        /**
+        * @brief Конструктор перемещения
+        * @param other - другая точка
+        */
+        Point(Point&& other);
 
         /**
          * @brief Получение координаты x
@@ -41,6 +52,20 @@ namespace geometry {
          * @return Расстояние между точками
          */
         double distanceTo(const Point& other) const;
+
+        /**
+         * @brief Оператор копирование
+         * @param other Другая точка
+         * @return Ссылка на текущий объект
+         */
+        Point& operator=(const Point& other);
+
+        /**
+         * @brief Оператор перемещение
+         * @param other Другая точка
+         * @return Ссылка на текущий объект
+         */
+        Point& operator=(Point&& other);
 
         /**
          * @brief Проверка точек на совпадение
