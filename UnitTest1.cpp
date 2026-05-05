@@ -1,4 +1,4 @@
-﻿#include <cassert>
+#include <cassert>
 #include <sstream>
 #include <iostream>
 #include "../task3/DoublyLinkedList.h"
