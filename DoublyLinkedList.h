@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 #include <string>
 #include <initializer_list>
@@ -14,9 +14,9 @@ namespace containers {
     template<typename T>
     class DoublyLinkedList {
     private:
-        Node<T>* head;    ///< Указатель на начало списка
-        Node<T>* tail;    ///< Указатель на конец списка
-        size_t size;      ///< Размер списка
+        Node<T>* head;    
+        Node<T>* tail;   
+        size_t size;      
 
         /**
          * @brief Копирует содержимое другого списка
