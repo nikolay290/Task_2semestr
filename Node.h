@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace containers {
 
@@ -9,9 +9,9 @@ namespace containers {
     template<typename T>
     class Node {
     public:
-        T data;           ///< Данные, хранящиеся в узле
-        Node<T>* next;    ///< Указатель на следующий узел
-        Node<T>* prev;    ///< Указатель на предыдущий узел
+        T data;          
+        Node<T>* next;    
+        Node<T>* prev;    
 
         /**
          * @brief Конструктор узла
