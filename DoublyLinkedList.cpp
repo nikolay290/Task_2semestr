@@ -1,4 +1,4 @@
-﻿#include "DoublyLinkedList.h"
+#include "DoublyLinkedList.h"
 #include <stdexcept>
 
 namespace containers {
